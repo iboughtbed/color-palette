@@ -1,12 +1,14 @@
 "use client";
 
-import * as React from "react";
 import { type DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
 
-import { cn } from "~/lib/utils";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
+import { type Tags } from "~/config/tags";
+import { cn } from "~/lib/utils";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -15,7 +17,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+      "flex h-full w-full flex-col rounded-md bg-popover text-popover-foreground",
       className,
     )}
     {...props}
@@ -23,7 +25,7 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-interface CommandDialogProps extends DialogProps {}
+type CommandDialogProps = DialogProps;
 
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
@@ -39,10 +41,56 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    colors: Tags["colors"];
+    collections: Tags["collections"];
+    onClear: () => void;
+    onRemove: (tag: string) => void;
+  }
+>(({ colors, collections, onClear, onRemove, className, ...props }, ref) => (
+  <div
+    className="flex w-full items-center rounded-full border px-3"
+    cmdk-input-wrapper=""
+  >
+    {!!colors?.length || !!collections?.length ? (
+      <div className="mr-2 flex gap-2 text-sm">
+        {colors.map((item) => (
+          <div
+            key={item.color}
+            className="relative flex items-center gap-2 rounded-full border bg-accent px-2 py-1 text-accent-foreground"
+          >
+            <div
+              className="size-4 rounded-full border"
+              style={{ backgroundColor: item.color }}
+            />
+            {item.title}
+            <button
+              className="inline-flex h-full items-center border-l pl-1"
+              onClick={() => onRemove(item.title)}
+            >
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        ))}
+
+        {collections.map((item) => (
+          <div
+            key={item}
+            className="relative flex items-center gap-2 rounded-full border bg-accent px-2 py-1 capitalize text-accent-foreground"
+          >
+            {item}
+            <button
+              className="inline-flex h-full items-center border-l pl-1"
+              onClick={() => onRemove(item)}
+            >
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+    )}
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
@@ -51,6 +99,10 @@ const CommandInput = React.forwardRef<
       )}
       {...props}
     />
+    <Link href="/" onClick={onClear}>
+      <X className="size-4" aria-hidden="true" />
+      <span className="sr-only">Clear all</span>
+    </Link>
   </div>
 ));
 
@@ -62,7 +114,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    className={cn("overflow-y-auto overflow-x-hidden", className)}
     {...props}
   />
 ));
@@ -89,7 +141,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-0 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-foreground",
       className,
     )}
     {...props}
@@ -117,7 +169,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none",
       className,
     )}
     {...props}
@@ -145,11 +197,11 @@ CommandShortcut.displayName = "CommandShortcut";
 export {
   Command,
   CommandDialog,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
-  CommandShortcut,
+  CommandList,
   CommandSeparator,
+  CommandShortcut,
 };

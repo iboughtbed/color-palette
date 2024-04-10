@@ -29,7 +29,17 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export function CreatePaletteForm() {
+export function CreatePaletteForm({
+  color1,
+  color2,
+  color3,
+  color4,
+}: {
+  color1?: string;
+  color2?: string;
+  color3?: string;
+  color4?: string;
+}) {
   const { execute, status } = useAction(createPalette, {
     onSuccess: () => {
       toast.success("Successfully created a palette");
@@ -39,10 +49,10 @@ export function CreatePaletteForm() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      color1: "#bbbbbb",
-      color2: "#cccccc",
-      color3: "#dddddd",
-      color4: "#eeeeee",
+      color1: color1 ?? "#bbbbbb",
+      color2: color2 ?? "#cccccc",
+      color3: color3 ?? "#dddddd",
+      color4: color4 ?? "#eeeeee",
       tags: "",
     },
   });

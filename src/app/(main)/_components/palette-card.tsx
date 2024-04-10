@@ -145,7 +145,7 @@ export function PaletteCard({
           </Button>
           <CopyButton value={absoluteUrl(`/palette/${paletteId}`)} />
           <Link
-            href={`/create?from=${palette.color1}-${palette.color2}-${palette.color3}-${palette.color4}`}
+            href={`/create?from=${encodeURIComponent(`${palette.color1}-${palette.color2}-${palette.color3}-${palette.color4}`)}`}
             className={cn(
               buttonVariants({
                 variant: "outline",

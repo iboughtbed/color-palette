@@ -59,7 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <div vaul-drawer-wrapper="">{children}</div>
           <TailwindIndicator />
-          <Sonner />
+          <Sonner richColors />
         </ThemeProvider>
       </body>
     </html>

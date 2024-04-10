@@ -99,10 +99,12 @@ const CommandInput = React.forwardRef<
       )}
       {...props}
     />
-    <Link href="/" onClick={onClear}>
-      <X className="size-4" aria-hidden="true" />
-      <span className="sr-only">Clear all</span>
-    </Link>
+    {(!!colors?.length || !!collections?.length) && (
+      <Link href="/" onClick={onClear}>
+        <X className="size-4" aria-hidden="true" />
+        <span className="sr-only">Clear all</span>
+      </Link>
+    )}
   </div>
 ));
 

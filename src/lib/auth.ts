@@ -1,11 +1,14 @@
+import { UpstashRedisAdapter } from "@next-auth/upstash-redis-adapter";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
+  type User,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import GithubProvider from "next-auth/providers/github";
 
 import { env } from "~/env";
+import { kv } from "~/lib/kv";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -17,15 +20,23 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      collection: string;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    collection: string;
+    // ...other properties
+    // role: UserRole;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    collection: string;
+  }
 }
 
 /**
@@ -34,20 +45,48 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+  secret: env.NEXTAUTH_SECRET,
+  adapter: UpstashRedisAdapter(kv),
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 7, // 7days
   },
-  // adapter: Redis
+
+  callbacks: {
+    session({ session, token }) {
+      if (token.sub) {
+        session.user.id = token.sub;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.collection = token.collection;
+      }
+
+      return session;
+    },
+    async jwt({ token }) {
+      if (!token.sub) return token;
+
+      const user = await kv.get<User>(`user:${token.sub}`);
+
+      if (user) {
+        const collection = await kv.get<string>(`collection:user-${user.id}`);
+
+        token.name = user.name;
+        token.email = user.email;
+        token.picture = user.image;
+        token.collection = collection ?? "";
+      }
+
+      return token;
+    },
+  },
+  pages: {
+    signIn: "/signin",
+  },
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.

@@ -17,7 +17,7 @@ export default async function PalettePage({
   }
 
   const session = await getServerAuthSession();
-  const likes = await kv.get<number>(`palette:${params.paletteId}:likes`);
+  const likes = await kv.get<number>(`likes:${params.paletteId}`);
 
   return (
     <>

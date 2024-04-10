@@ -16,7 +16,7 @@ export const createPalette = protectedAction(
     const id = generateId(20);
 
     await kv.json.set(`palette:${id}`, "$", input);
-    await kv.set(`palette:${id}:likes`, 0);
+    await kv.set(`likes:${id}`, 0);
 
     redirect(`/palette/${id}`);
   },
@@ -39,11 +39,11 @@ export const likePalette = protectedAction(
 
     if (index !== -1) {
       palettes.splice(index, 1);
-      likes = await kv.decr(`palette:${paletteId}:likes`);
+      likes = await kv.decr(`likes:${paletteId}`);
       hasLiked = false;
     } else {
       palettes.push(paletteId);
-      likes = await kv.incr(`palette:${paletteId}:likes`);
+      likes = await kv.incr(`likes:${paletteId}`);
       hasLiked = true;
     }
 

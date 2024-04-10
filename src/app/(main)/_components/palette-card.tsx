@@ -14,7 +14,7 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { type Palette } from "~/lib/kv/schema";
 import { absoluteUrl, cn } from "~/lib/utils";
 
-interface PaletteCardProps {
+interface PaletteCardProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: Session["user"];
   palette: Palette;
   paletteId: string;
@@ -26,6 +26,8 @@ export function PaletteCard({
   palette,
   paletteId,
   likes,
+  className,
+  ...props
 }: PaletteCardProps) {
   const router = useRouter();
   const [likesCount, setLikesCount] = useState(likes);
@@ -52,8 +54,14 @@ export function PaletteCard({
   );
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex h-[400px] w-[400px] flex-col overflow-hidden rounded-lg">
+    <div className="flex h-full min-h-[400px] w-full flex-col gap-2">
+      <div
+        className={cn(
+          "flex h-[400px] w-[400px] flex-col overflow-hidden rounded-lg",
+          className,
+        )}
+        {...props}
+      >
         <div
           className="group relative w-full basis-2/5"
           style={{ backgroundColor: palette.color1 }}

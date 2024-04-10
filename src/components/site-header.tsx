@@ -27,7 +27,7 @@ export function SiteHeader({ user, showCommandMenu = true }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-14">
-        <div className="mr-4 flex">
+        <div className="flex md:mr-4">
           <Link
             href="/"
             className="mr-6 flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
@@ -42,7 +42,7 @@ export function SiteHeader({ user, showCommandMenu = true }: SiteHeaderProps) {
           <div className="w-full flex-1">
             {showCommandMenu && <CommandMenu />}
           </div>
-          <nav className="flex min-w-80 items-center justify-end">
+          <nav className="flex items-center justify-end md:min-w-80">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

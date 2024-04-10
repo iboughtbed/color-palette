@@ -9,13 +9,15 @@ export async function getPalettes() {
   const palettes: (Palette & { id: string; likes: number })[] = [];
 
   for (const key of keys) {
+    const id = key.split(":")[1];
+
     const palette = await kv.json.get<Palette>(key);
-    const likes = await kv.get<number>(`likes:${key.split(":")[1]}`);
+    const likes = await kv.get<number>(`likes:${id}`);
 
     if (palette) {
       palettes.push({
         ...palette,
-        id: key,
+        id: id ?? key,
         likes: likes ?? 0,
       });
     }

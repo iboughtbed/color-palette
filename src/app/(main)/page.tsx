@@ -10,7 +10,10 @@ export default async function HomePage() {
   return (
     <>
       <div className="flex flex-col px-5">
-        <PaletteList user={session?.user} palettes={palettes} />
+        <PaletteList
+          palettes={palettes}
+          collection={session?.user.collection}
+        />
       </div>
     </>
   );

@@ -13,8 +13,8 @@ export function SidebarNav() {
 
   const items: NavItems = [
     { title: "New", href: "/", icon: "sparkle" },
-    { title: "Popular", href: "/popular", icon: "flame" },
-    { title: "Random", href: "/random", icon: "shell" },
+    { title: "Popular", href: "/#", icon: "flame" },
+    { title: "Random", href: "/#", icon: "shell" },
     { title: "Collection", href: "/collection", icon: "heart" },
   ];
 

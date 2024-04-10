@@ -18,47 +18,39 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 
-// const formSchema = palette;
 const formSchema = z.object({
   color1: z.string(),
   color2: z.string(),
   color3: z.string(),
   color4: z.string(),
-  tags: z.string().min(1),
+  tags: z.string().regex(/[^,\s][^\,]*[^,\s]*/),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-export function CreatePaletteForm({
-  color1,
-  color2,
-  color3,
-  color4,
-}: {
-  color1?: string;
-  color2?: string;
-  color3?: string;
-  color4?: string;
-}) {
+export function CreatePaletteForm({ colors }: { colors: string[] }) {
   const { execute, status } = useAction(createPalette, {
     onSuccess: () => {
       toast.success("Successfully created a palette");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
     },
   });
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      color1: color1 ?? "#bbbbbb",
-      color2: color2 ?? "#cccccc",
-      color3: color3 ?? "#dddddd",
-      color4: color4 ?? "#eeeeee",
+      color1: colors[0] ?? "#bbbbbb",
+      color2: colors[1] ?? "#cccccc",
+      color3: colors[2] ?? "#dddddd",
+      color4: colors[3] ?? "#eeeeee",
       tags: "",
     },
   });
 
   function onSubmit(data: FormData) {
-    execute({ ...data, createdAt: new Date() });
+    execute({ ...data });
   }
 
   return (
@@ -80,6 +72,7 @@ export function CreatePaletteForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="color2"
@@ -95,6 +88,7 @@ export function CreatePaletteForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="color3"
@@ -110,6 +104,7 @@ export function CreatePaletteForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="color4"
@@ -133,15 +128,7 @@ export function CreatePaletteForm({
           render={({ field }) => (
             <FormItem>
               <FormDescription>
-                Add tag names separated by comma.{" "}
-                {/* <Tooltip>
-                  <TooltipTrigger>
-                    <span className="text-blue-600/80">See allowed tags</span>
-                  </TooltipTrigger>
-                  <TooltipContent className="w-60">
-                    <p>{allowedTags.join(", ")}</p>
-                  </TooltipContent>
-                </Tooltip> */}
+                Add tag names separated by comma.
               </FormDescription>
               <FormControl>
                 <Input placeholder="Add tags" {...field} />

@@ -21,14 +21,18 @@ export default async function PalettePage({
 
   return (
     <>
-      <div className="flex flex-col items-center gap-4">
-        <p className="text-sm">Hover over the color to see the value</p>
-        <PaletteCard
-          user={session?.user}
-          palette={palette}
-          paletteId={params.paletteId}
-          likes={likes ?? 0}
-        />
+      <div>
+        <p className="text-center text-sm">
+          Hover over the color to see the value
+        </p>
+        <div className="mx-auto mt-4 max-w-96">
+          <PaletteCard
+            palette={palette}
+            paletteId={params.paletteId}
+            collection={session?.user.collection}
+            likes={likes ?? 0}
+          />
+        </div>
       </div>
     </>
   );

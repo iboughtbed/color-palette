@@ -8,14 +8,17 @@ import { palette } from "~/lib/kv/schema";
 import { protectedAction } from "~/lib/safe-action";
 import { generateId } from "~/lib/utils";
 
-const createPaletteSchema = palette;
+const createPaletteSchema = palette.omit({ createdAt: true });
 
 export const createPalette = protectedAction(
   createPaletteSchema,
   async (input) => {
     const id = generateId(20);
 
-    await kv.json.set(`palette:${id}`, "$", input);
+    await kv.json.set(`palette:${id}`, "$", {
+      ...input,
+      createdAt: new Date(),
+    });
     await kv.set(`likes:${id}`, 0);
 
     redirect(`/palette/${id}`);

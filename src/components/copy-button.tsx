@@ -33,10 +33,7 @@ export function CopyButton({
     <Button
       size="sm"
       variant="outline"
-      className={cn(
-        "relative z-10 items-center hover:bg-zinc-700 hover:text-zinc-50",
-        className,
-      )}
+      className={cn("relative z-10 items-center", className)}
       onClick={() => {
         copyToClipboard(value);
         setHasCopied(true);
@@ -49,7 +46,7 @@ export function CopyButton({
       ) : (
         <CopyIcon className="mr-2 size-4" />
       )}
-      {text ?? "Link"}
+      {text}
     </Button>
   );
 }

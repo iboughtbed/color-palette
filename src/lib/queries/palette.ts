@@ -32,15 +32,17 @@ export async function getCollection() {
     throw new Error("Unauthenticated");
   }
 
-  const palettes: Palette[] = [];
-  const collection = session.user.collection
+  const palettes: PaletteWithId[] = [];
+  const collection = (
+    (await kv.get<string>(`collection:user-${session.user.id}`)) ?? ""
+  )
     .split(",")
     .filter((id) => id !== "");
 
   for (const key of collection) {
     const palette = await kv.json.get<Palette>(`palette:${key}`);
     if (palette) {
-      palettes.push(palette);
+      palettes.push({ ...palette, id: key });
     }
   }
 

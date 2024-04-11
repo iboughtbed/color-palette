@@ -16,10 +16,14 @@ export default async function CollectionPage() {
   return (
     <>
       <div className="flex flex-col px-5">
-        <PaletteList
-          palettes={palettes}
-          collection={session?.user.collection}
-        />
+        {!!palettes?.length ? (
+          <PaletteList
+            palettes={palettes} 
+            collection={session?.user.collection}
+          />
+        ) : (
+          <p>No palettes in collection</p>
+        )}
       </div>
     </>
   );

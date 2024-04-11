@@ -77,6 +77,8 @@ Another small issue was implementing optimistic updates on server actions. Spent
 
 No major issues with the app at the moment. I'll keep an eye out for any problems during development and testing.
 
+#### Notes: I'm a student at Nazarbayev Intellectual School in 10th grade and typically study from 8:00 AM to 6:00 PM. Had some issues with time management
+
 ## License
 
 Licensed under the MIT License. Check the [LICENSE](./LICENSE) file for details.

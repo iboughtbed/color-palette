@@ -42,7 +42,7 @@ export function SiteHeader({ user, showCommandMenu = true }: SiteHeaderProps) {
           <div className="w-full flex-1">
             {showCommandMenu && <CommandMenu />}
           </div>
-          <nav className="flex items-center justify-end md:min-w-80">
+          <nav className="flex items-center justify-end md:min-w-40 xl:min-w-80">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

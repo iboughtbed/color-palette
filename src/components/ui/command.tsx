@@ -2,12 +2,10 @@
 
 import { type DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
-import { Search, X } from "lucide-react";
-import Link from "next/link";
+import { Search } from "lucide-react";
 import * as React from "react";
 
 import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { type Tags } from "~/config/tags";
 import { cn } from "~/lib/utils";
 
 const Command = React.forwardRef<
@@ -41,56 +39,13 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
-    colors: Tags["colors"];
-    collections: Tags["collections"];
-    onClear: () => void;
-    onRemove: (tag: string) => void;
-  }
->(({ colors, collections, onClear, onRemove, className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
+>(({ className, ...props }, ref) => (
   <div
     className="flex w-full items-center rounded-full border px-3"
     cmdk-input-wrapper=""
   >
-    {!!colors?.length || !!collections?.length ? (
-      <div className="mr-2 flex gap-2 text-sm">
-        {colors.map((item) => (
-          <div
-            key={item.color}
-            className="relative flex items-center gap-2 rounded-full border bg-accent px-2 py-1 text-accent-foreground"
-          >
-            <div
-              className="size-4 rounded-full border"
-              style={{ backgroundColor: item.color }}
-            />
-            {item.title}
-            <button
-              className="inline-flex h-full items-center border-l pl-1"
-              onClick={() => onRemove(item.title)}
-            >
-              <X className="size-4" aria-hidden="true" />
-            </button>
-          </div>
-        ))}
-
-        {collections.map((item) => (
-          <div
-            key={item}
-            className="relative flex items-center gap-2 rounded-full border bg-accent px-2 py-1 capitalize text-accent-foreground"
-          >
-            {item}
-            <button
-              className="inline-flex h-full items-center border-l pl-1"
-              onClick={() => onRemove(item)}
-            >
-              <X className="size-4" aria-hidden="true" />
-            </button>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-    )}
+    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
@@ -99,12 +54,6 @@ const CommandInput = React.forwardRef<
       )}
       {...props}
     />
-    {(!!colors?.length || !!collections?.length) && (
-      <Link href="/" onClick={onClear}>
-        <X className="size-4" aria-hidden="true" />
-        <span className="sr-only">Clear all</span>
-      </Link>
-    )}
   </div>
 ));
 

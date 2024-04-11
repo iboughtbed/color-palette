@@ -18,7 +18,7 @@ export default async function CollectionPage() {
       <div className="flex flex-col px-5">
         {!!palettes?.length ? (
           <PaletteList
-            palettes={palettes} 
+            palettes={palettes}
             collection={session?.user.collection}
           />
         ) : (

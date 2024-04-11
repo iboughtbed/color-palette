@@ -1,6 +1,6 @@
 # [Color palette](https://color-palette-gamma.vercel.app)
 
-This is an open source e-commerce skateshop build with everything new in Next.js 14. It is bootstrapped with `create-t3-app`.
+This is an open source color palette website build with everything new in Next.js 14. It is bootstrapped with `create-t3-app`.
 
 [![Color palette](./public/images/screenshot.png)](https://color-palette-gamma.vercel.app)
 
@@ -22,6 +22,7 @@ This is an open source e-commerce skateshop build with everything new in Next.js
 - [x] Palette tags and likes
 - [x] Tag-based searching
 - [x] Personal palette collection and sharing
+- [x] Secure data layer (server-only code) and server actions, middleware
 
 ## Running Locally
 
@@ -70,8 +71,11 @@ One unique aspect of my approach is my ability to think and code quickly. This a
 ### Compromises and Challenges
 
 Creating the tag-based palette search menu was tough due to school time constraints. Spent about 4 hours refining it.
+I wanted to add a dropdown menu for the search bar, but it didn't work as expected, instead ended up using dialog menu.
 
 Another small issue was implementing optimistic updates on server actions. Spent 30-40 minutes on it initially but decided not to use it in the final version.
+
+I also considered using Prisma, but ended up using Redis because of the speed advantage
 
 #### Known Issues
 

@@ -11,7 +11,7 @@ export default function SignInPage() {
   return (
     <>
       <div className="relative flex min-h-screen flex-col items-center justify-center">
-        <Card>
+        <Card className="md:min-w-80">
           <CardHeader>
             <CardTitle className="text-2xl">Sign in</CardTitle>
             <CardDescription>

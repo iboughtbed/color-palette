@@ -109,7 +109,7 @@ export function CommandMenu() {
   return (
     <>
       <div className="flex w-full items-center gap-2">
-        <ScrollArea className="max-w-80 shrink-0">
+        <ScrollArea className="lg:max-w-80 lg:shrink-0">
           <div className="mr-2 flex gap-2 text-sm">
             {colors.map((item) => (
               <div

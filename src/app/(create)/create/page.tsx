@@ -10,7 +10,7 @@ export default function CreatePalettePage({
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center py-6">
+      <div className="flex flex-col justify-center px-5 py-6 md:items-center">
         <CreatePaletteForm colors={colors} />
       </div>
     </>

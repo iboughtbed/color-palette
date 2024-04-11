@@ -56,7 +56,7 @@ export function CreatePaletteForm({ colors }: { colors: string[] }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="flex h-[400px] w-[400px] flex-col overflow-hidden rounded-lg">
+        <div className="flex aspect-square w-full flex-col overflow-hidden rounded-lg md:w-[400px]">
           <FormField
             control={form.control}
             name="color1"

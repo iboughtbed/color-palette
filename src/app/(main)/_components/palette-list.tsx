@@ -3,7 +3,7 @@
 import { formatDistanceToNowStrict } from "date-fns";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { likePalette } from "~/actions/palette";
@@ -11,9 +11,9 @@ import { CopyButton } from "~/components/copy-button";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import type { Palette } from "~/lib/kv/schema";
-import { absoluteUrl, cn } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 
-type PaletteWithId = Palette & { id: string; likes: number };
+type PaletteWithId = Palette & { id: string };
 
 interface PaletteListProps {
   palettes: PaletteWithId[];
@@ -22,7 +22,7 @@ interface PaletteListProps {
 
 export function PaletteList({ palettes, collection }: PaletteListProps) {
   return (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
       {palettes.map((palette) => (
         <PaletteItem
           key={palette.id}
@@ -41,7 +41,7 @@ interface PaletteItemProps {
 
 function PaletteItem({ palette, collection }: PaletteItemProps) {
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   const [likesCount, setLikesCount] = useState(palette.likes);
   const [hasLiked, setHasLiked] = useState(collection?.includes(palette.id));
@@ -114,7 +114,7 @@ function PaletteItem({ palette, collection }: PaletteItemProps) {
             />
             {likesCount}
           </Button>
-          <CopyButton value={absoluteUrl(pathname)} text="Link" />
+          {/* <CopyButton value={absoluteUrl(pathname)} text="Link" /> */}
           <Button
             variant="outline"
             size="sm"
@@ -126,7 +126,9 @@ function PaletteItem({ palette, collection }: PaletteItemProps) {
             Edit
           </Button>
         </div>
-        <p>{formatDistanceToNowStrict(palette.createdAt)}</p>
+        <p className="text-sm">
+          {formatDistanceToNowStrict(palette.createdAt)}
+        </p>
       </div>
     </div>
   );

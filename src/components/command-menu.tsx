@@ -12,6 +12,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "~/components/ui/command";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { tags, type Tags } from "~/config/tags";
 import { useClickOutside } from "~/hooks/use-click-outside";
 import { cn } from "~/lib/utils";
@@ -103,12 +104,50 @@ export function CommandMenu() {
     router.push(`/?q=${encodeURIComponent(newQuery ?? "")}`);
   }
 
+  function onColorClick(item: { title: string }) {
+    const title = item.title.toLowerCase();
+    let newQuery: string;
+
+    if (query?.includes(title)) {
+      newQuery = query
+        .replace(title, "")
+        .replace(/--+/g, "-")
+        .replace(/^-|-$/g, "")
+        .trim();
+    } else {
+      const colors = query?.split("-").filter(Boolean) ?? [];
+      colors.push(title);
+      newQuery = colors.join("-");
+    }
+
+    runCommand(() => router.push(`/?q=${encodeURIComponent(newQuery)}`));
+  }
+
+  function onCollectionClick(item: string) {
+    const title = item.toLowerCase();
+    let newQuery: string;
+
+    if (query?.includes(title)) {
+      newQuery = query
+        .replace(title, "")
+        .replace(/--+/g, "-")
+        .replace(/^-|-$/g, "")
+        .trim();
+    } else {
+      const collections = query?.split("-").filter(Boolean) ?? [];
+      collections.push(title);
+      newQuery = collections.join("-");
+    }
+
+    runCommand(() => router.push(`/?q=${encodeURIComponent(newQuery)}`));
+  }
+
   return (
     <>
       <Command
         ref={commandRef}
         value={value}
-        className="relative z-50 h-14 justify-center"
+        className="relative z-[60] h-14 justify-center"
       >
         <div className="flex w-full">
           <CommandInput
@@ -126,83 +165,51 @@ export function CommandMenu() {
         </div>
         <CommandList
           className={cn(
-            "absolute top-14 z-[60] w-full rounded-b-lg border bg-white px-6 py-4 shadow-lg",
+            "absolute top-14 z-[60] max-h-[90vh] w-full rounded-b-lg border bg-white px-6 py-4 shadow-lg",
             !open && "hidden",
           )}
         >
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Colors" className="[&_[cmdk-item]]:py-1">
-            <div className="flex flex-wrap gap-2">
-              {tags.colors.map((item) => (
-                <CommandItem
-                  key={item.color}
-                  value={item.title}
-                  onSelect={() => {
-                    const title = item.title.toLowerCase();
-                    let newQuery: string;
-
-                    if (query?.includes(title)) {
-                      newQuery = query
-                        .replace(title, "")
-                        .replace(/--+/g, "-")
-                        .replace(/^-|-$/g, "")
-                        .trim();
-                    } else {
-                      const colors = query?.split("-").filter(Boolean) ?? [];
-                      colors.push(title);
-                      newQuery = colors.join("-");
-                    }
-
-                    runCommand(() =>
-                      router.push(`/?q=${encodeURIComponent(newQuery)}`),
-                    );
-                  }}
-                  className="rounded-full border"
-                >
-                  <div
-                    className="mr-2 size-4 rounded-full border"
-                    style={{ backgroundColor: item.color }}
-                  />
-                  {item.title}
-                </CommandItem>
-              ))}
-            </div>
-          </CommandGroup>
-          <CommandSeparator className="my-6" />
-          <CommandGroup heading="Collections" className="[&_[cmdk-item]]:py-1">
-            <div className="flex flex-wrap gap-2">
-              {tags.collections.map((item) => (
-                <CommandItem
-                  key={item}
-                  value={item}
-                  onSelect={() => {
-                    const title = item.toLowerCase();
-                    let newQuery: string;
-
-                    if (query?.includes(title)) {
-                      newQuery = query
-                        .replace(title, "")
-                        .replace(/--+/g, "-")
-                        .replace(/^-|-$/g, "")
-                        .trim();
-                    } else {
-                      const collections =
-                        query?.split("-").filter(Boolean) ?? [];
-                      collections.push(title);
-                      newQuery = collections.join("-");
-                    }
-
-                    runCommand(() =>
-                      router.push(`/?q=${encodeURIComponent(newQuery)}`),
-                    );
-                  }}
-                  className="rounded-full border hover:bg-accent"
-                >
-                  {item}
-                </CommandItem>
-              ))}
-            </div>
-          </CommandGroup>
+          <ScrollArea className="relative z-[70]">
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Colors" className="[&_[cmdk-item]]:py-1">
+              <div className="flex flex-wrap gap-2">
+                {tags.colors.map((item) => (
+                  <CommandItem
+                    key={item.color}
+                    value={item.title}
+                    onSelect={() => onColorClick({ title: item.title })}
+                    onClick={() => onColorClick({ title: item.title })}
+                    className="relative cursor-pointer rounded-full border hover:bg-accent hover:text-accent-foreground"
+                  >
+                    <div
+                      className="mr-2 size-4 rounded-full border"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    {item.title}
+                  </CommandItem>
+                ))}
+              </div>
+            </CommandGroup>
+            <CommandSeparator className="my-6" />
+            <CommandGroup
+              heading="Collections"
+              className="[&_[cmdk-item]]:py-1"
+            >
+              <div className="flex flex-wrap gap-2">
+                {tags.collections.map((item) => (
+                  <CommandItem
+                    key={item}
+                    value={item}
+                    onSelect={() => onCollectionClick(item)}
+                    onClick={() => onCollectionClick(item)}
+                    className="relative cursor-pointer rounded-full border hover:bg-accent hover:text-accent-foreground"
+                  >
+                    {item}
+                  </CommandItem>
+                ))}
+              </div>
+            </CommandGroup>
+          </ScrollArea>
         </CommandList>
       </Command>
     </>

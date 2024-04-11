@@ -16,19 +16,17 @@ interface PaletteCardProps extends React.HTMLAttributes<HTMLDivElement> {
   palette: Palette;
   paletteId: string;
   collection?: string;
-  likes: number;
 }
 
 export function PaletteCard({
   palette,
   paletteId,
   collection,
-  likes,
 }: PaletteCardProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [likesCount, setLikesCount] = useState(likes);
+  const [likesCount, setLikesCount] = useState(palette.likes);
   const [hasLiked, setHasLiked] = useState(collection?.includes(paletteId));
 
   const { execute } = useAction(likePalette, {

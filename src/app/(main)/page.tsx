@@ -2,10 +2,17 @@ import { getServerAuthSession } from "~/lib/auth";
 import { getPalettes } from "~/lib/queries/palette";
 import { PaletteList } from "./_components/palette-list";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
   const session = await getServerAuthSession();
 
-  const { palettes } = await getPalettes();
+  const q = searchParams.q as string;
+  const tags = q?.split("-").filter(Boolean) ?? [];
+
+  const { palettes } = await getPalettes({ tags });
 
   return (
     <>

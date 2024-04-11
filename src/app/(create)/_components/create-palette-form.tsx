@@ -50,7 +50,7 @@ export function CreatePaletteForm({ colors }: { colors: string[] }) {
   });
 
   function onSubmit(data: FormData) {
-    execute({ ...data });
+    execute({ ...data, likes: 0 });
   }
 
   return (

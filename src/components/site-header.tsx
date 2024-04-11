@@ -26,7 +26,7 @@ interface SiteHeaderProps {
 export function SiteHeader({ user, showCommandMenu = true }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-14">
+      <div className="flex h-14 px-8">
         <div className="flex md:mr-4">
           <Link
             href="/"

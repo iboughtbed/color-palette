@@ -1,25 +1,46 @@
 import "server-only";
 
+import { getServerAuthSession } from "~/lib/auth";
 import { kv } from "~/lib/kv";
-import { type Palette } from "~/lib/kv/schema";
+import type { Palette, PaletteWithId } from "~/lib/kv/schema";
 
-export async function getPalettes() {
+export async function getPalettes({ tags }: { tags: string[] }) {
   const keys = await kv.keys("palette:*");
 
-  const palettes: (Palette & { id: string; likes: number })[] = [];
+  const palettes: PaletteWithId[] = [];
 
   for (const key of keys) {
     const id = key.split(":")[1];
 
     const palette = await kv.json.get<Palette>(key);
-    const likes = await kv.get<number>(`likes:${id}`);
 
-    if (palette) {
+    if (palette && tags.every((tag) => palette.tags.includes(tag))) {
       palettes.push({
         ...palette,
         id: id ?? key,
-        likes: likes ?? 0,
       });
+    }
+  }
+
+  return { palettes };
+}
+
+export async function getCollection() {
+  const session = await getServerAuthSession();
+
+  if (!session?.user) {
+    throw new Error("Unauthenticated");
+  }
+
+  const palettes: Palette[] = [];
+  const collection = session.user.collection
+    .split(",")
+    .filter((id) => id !== "");
+
+  for (const key of collection) {
+    const palette = await kv.json.get<Palette>(`palette:${key}`);
+    if (palette) {
+      palettes.push(palette);
     }
   }
 

@@ -5,6 +5,7 @@ export const palette = z.object({
   color2: z.string(),
   color3: z.string(),
   color4: z.string(),
+  likes: z.number(),
   tags: z
     .string()
     .transform((value) =>
@@ -15,3 +16,7 @@ export const palette = z.object({
 });
 
 export type Palette = z.infer<typeof palette>;
+
+export type PaletteWithId = Palette & {
+  id: string;
+};

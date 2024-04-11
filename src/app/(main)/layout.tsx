@@ -23,7 +23,7 @@ export default async function MainLayout({ children }: MainLayoutProps) {
           <main className="flex w-full flex-1 flex-col overflow-hidden py-6 lg:py-8">
             {children}
           </main>
-          <div className="hidden min-w-80 max-w-80 px-5 py-6 md:block lg:py-8">
+          <div className="hidden min-w-80 max-w-80 px-5 py-6 lg:py-8 xl:block">
             <div>
               <h1 className="text-lg font-medium">
                 Color Palettes for Designers and Artists

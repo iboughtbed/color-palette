@@ -17,7 +17,6 @@ export default async function PalettePage({
   }
 
   const session = await getServerAuthSession();
-  const likes = await kv.get<number>(`likes:${params.paletteId}`);
 
   return (
     <>
@@ -30,7 +29,6 @@ export default async function PalettePage({
             palette={palette}
             paletteId={params.paletteId}
             collection={session?.user.collection}
-            likes={likes ?? 0}
           />
         </div>
       </div>
